@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Tổng quan về Android build config | My blog</title>
+  <meta name="description" content="1. Configure your build Cấu hình build ứng dụng   Hệ thống build Android biên dịch mã nguồn, tài nguyên của 1 dự án thành file APK giúp bạn có thể kiểm thử hoặc tải lên chợ ứng dụng. Android Studio sử">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tổng quan về Android build config">
+<meta property="og:url" content="https://nvquangth.github.io/2020/08/25/configure-build-gradle-p1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1. Configure your build Cấu hình build ứng dụng   Hệ thống build Android biên dịch mã nguồn, tài nguyên của 1 dự án thành file APK giúp bạn có thể kiểm thử hoặc tải lên chợ ứng dụng. Android Studio sử">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://developer.android.com/images/tools/studio/build-process_2x.png">
+<meta property="og:image" content="https://developer.android.com/images/tools/studio/project-structure_2x.png">
+<meta property="article:published_time" content="2020-08-25T06:03:24.000Z">
+<meta property="article:modified_time" content="2021-07-09T03:54:41.838Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="build config">
+<meta property="article:tag" content="gradle">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://developer.android.com/images/tools/studio/build-process_2x.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://nvquangth.github.io/2020/08/25/configure-build-gradle-p1/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/nvquangth" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Nguyễn Văn Quang</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Mobile Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Hà Nội, Việt Nam</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a><span class="archive-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/09/interviews-p4/" class="title">Tổng hợp những câu hỏi về Android - Phần 4</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-09T04:01:02.000Z" itemprop="datePublished">2021-07-09</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/11/25/privacy-change-android-10/" class="title">Một số lưu ý thay đổi liên quan đến External Storage trên Android 10(API 29)</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-11-25T08:07:07.000Z" itemprop="datePublished">2020-11-25</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/11/13/the-clean-architecture-p2/" class="title">The Clean Architecture - Part 2</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-11-13T04:12:51.000Z" itemprop="datePublished">2020-11-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/26/interviews-p3/" class="title">Tổng hợp những câu hỏi về Android - Phần 3</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-26T05:56:14.000Z" itemprop="datePublished">2020-09-26</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/20/interviews-p2/" class="title">Tổng hợp những câu hỏi về Android - Phần 2</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-20T06:56:41.000Z" itemprop="datePublished">2020-09-20</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-configure-build-gradle-p1" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Tổng quan về Android build config
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/08/25/configure-build-gradle-p1/" class="article-date">
+	  <time datetime="2020-08-25T06:03:24.000Z" itemprop="datePublished">2020-08-25</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/build-config/" rel="tag">build config</a>, <a class="article-tag-link-link" href="/tags/gradle/" rel="tag">gradle</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/08/25/configure-build-gradle-p1/#comments" class="article-comment-link">Comments</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h1 id="1-Configure-your-build"><a href="#1-Configure-your-build" class="headerlink" title="1. Configure your build"></a>1. Configure your build</h1><blockquote>
+<p>Cấu hình build ứng dụng</p>
+</blockquote>
+<ul>
+<li>Hệ thống build Android biên dịch mã nguồn, tài nguyên của 1 dự án thành file APK giúp bạn có thể kiểm thử hoặc tải lên chợ ứng dụng.</li>
+<li>Android Studio sử dụng <a target="_blank" rel="noopener" href="https://gradle.org/">Gradle</a> như 1 công cụ hỗ trợ quá trình build, với các tính năng mạnh mẽ như: tự động hóa quá trình build, tạo và quản lý linh hoạt các bản build.</li>
+<li>Android plugin là 1 plugin làm việc với Gradle để cung cấp những quy trình và cấu hình dành riêng cho việc build và kiểm thử ứng dụng Android.</li>
+<li>Gradle và Android plugin hoạt động độc lập với Andorid Studio. Điều này có nghĩa là bạn có thể build 1 úng dụng Android mà không cần đến Android Studio. Và dĩ nhiên kết quả build không hoặc có sử dụng Android Studio đều là như nhau.</li>
+<li>Android plugin cho phép bạn tạo ra các bản build khác nhau 1 cách linh hoạt mà không cần phải thay đổi trực tiếp các file mã nguồn của ứng dụng.</li>
+</ul>
+<p><strong>Chú ý:</strong> vì Android plugin và Gradle hoạt động độc lập với nhau, nên việc update version của mỗi thành phần không liên quan đến nhau.</p>
+<blockquote>
+<p>Quá trình build ứng dụng</p>
+</blockquote>
+<ul>
+<li>Để  có được kết quả cuối cùng là file APK thì cần trải qua nhiều quá trình build, kết hợp với các công cụ khác nhau.</li>
+</ul>
+<p><img src="https://developer.android.com/images/tools/studio/build-process_2x.png"></p>
+<ol>
+<li>Trình biên dịch sẽ chuyển đổi mã nguồn thành file DEX(Dalvik Executable) chứa mã bytecode có thể chạy được trên thiết bị Android hoặc bất kỳ đâu.</li>
+<li>APK Packager kết hợp file DEX và các tài nguyên ứng dụng thành 1 file APK duy nhất. Tuy nhiên, trước khi ứng dụng có thể cài đặt và phát hành trên chợ ứng dụng thì file APK phải có chữ ký.</li>
+<li>APK Packager tạo chữ ký cho file APK bằng cách sử dụng debug hoặc release keystore.<br>a. Chế độ debug thường được sử dụng để kiểm thử, Android Studio tự động tạo debug keystore khi build ứng dụng ở chế độ này.<br>b. Chế độ release được sử dụng để phát hành ứng dụng lên chợ ứng dụng, lúc này bạn phải tự tạo 1 release keystore để cung cấp cho quá trình build release này.</li>
+<li>Trước khi tạo ra file APK cuối cùng, APK Packager sử dụng công cụ <a target="_blank" rel="noopener" href="https://developer.android.com/studio/command-line/zipalign">ziplian</a> để tối ưu hóa ứng dụng về bộ nhớ khi chạy trên thiết bị.</li>
+</ol>
+<h1 id="2-Custom-build-configurations"><a href="#2-Custom-build-configurations" class="headerlink" title="2. Custom build configurations"></a>2. Custom build configurations</h1><blockquote>
+<p>Tùy chỉnh cấu hình build ứng dụng</p>
+</blockquote>
+<p>Gradle và Android plugin cung cấp nhiều tùy chọn để tạo ra 1 bản build linh hoạt:</p>
+<ul>
+<li><strong>Build types:</strong> định nghĩa 1 số thuộc tính để gradle sử dụng khi building và cấu hình cho 1 số giai đoạn khác nhau trong vòng đời phát triển của ứng dụng. Mặc định, Android Studio định nghĩa sẵn 2 loại build type là debug và realse. Ngoài ra bạn có thể tự tạo thêm các loại build type khác.</li>
+<li><strong>Product flavors:</strong> thường dùng để tạo ra các phiên bản khác nhau của ứng dụng như bản mấy phí, bản miễn phí. Product flavors là 1 tùy chọn nên mặc định Android Studio sẽ không có product flavors nào.</li>
+<li><strong>Build variants:</strong> 1 bản build variant là sự kết hợp giữa 1 build type và 1 product flavor, do vậy các cấu hình của 1 build variants sẽ là tập những cấu hình của build type + tập những cấu hình của product flavor. Các build variants này được Android Studio tự động tạo ra từ build type và product flavor.</li>
+<li><strong>Manifest entries:</strong> 1 số thuộc tính của Android Manifest có thể được cấu hình từ build gradle. Những giá trị được thiết lập tại đây, sẽ ghi đè những giá trị trước đó trong Android Manifest. Điều này giúp bạn có thể tạo ra nhiều bản build APK với nhiều thuộc tính khác nhau: tên ứng dụng, min SDK verion, target SDK version.</li>
+<li><strong>Dependencies:</strong> hệ thống build quản lý các phụ thuộc từ các nguồn local cũng như remote. Điều này giúp bạn không cần thực hiện 1 số công việc thủ công như: tìm kiếm, download, copy, paste các thư viện vào project của bạn.</li>
+<li><strong>Signing:</strong> hệ thống build cho phép bạn tạo ra chữ ký để kết hợp với quá trình build. Nếu là build debug, hệ thống sẽ tự động sinh chữ ký để bạn có thể debug nhanh hơn. Nhưng khi build release thì bạn phải tạo chữ ký 1 cách thủ công.</li>
+<li><strong>Code and resource shrinking:</strong> hệ thống build cho phép bạn cấu hình để mã hóa mã nguồn bằng việc sử dụng file ProGuard cho mỗi build variant. Hệ thống sẽ dựa vào file này để thiết lập các quy tắc rút gọn mã nguồn sao cho phù hợp.</li>
+<li><strong>Mutilple APK support:</strong> hệ thống build cho phép bạn tạo ra các bản build APK khác nhau, mỗi bản build chỉ chứa 1 số màn hình nhất định hoặc Application Binary Interface (ABI).</li>
+</ul>
+<h1 id="3-Build-configuration-files"><a href="#3-Build-configuration-files" class="headerlink" title="3. Build configuration files"></a>3. Build configuration files</h1><blockquote>
+<p>Cách cấu hình build</p>
+</blockquote>
+<ul>
+<li>Hầu hết các cấu hình build sẽ được viết trong file build.gradle</li>
+<li>Các file này sử dụng Domain Specific Language(DSL) - ngôn ngữ dành riêng để mô tả các thao tác logic.</li>
+<li>Có 2 loại ngôn ngữ DSL phổ biến là Grovy và Kotlin. Nếu viết bằng Grovy, file có dạng build.gradle, nếu viết bằng Kotlin, file có dạng build.gradle.kts</li>
+<li>Khi tạo mới 1 project, Android Studio sẽ tự động tạo ra 1 số file build config với nội dung có sẵn 1 số config, với cấu trúc thư mục mặc định như sau:</li>
+</ul>
+<p><img src="https://developer.android.com/images/tools/studio/project-structure_2x.png"></p>
+<ul>
+<li>Dựa vào hình, bạn có thể thấy các file build cũng là 1 phần của ứng dụng. Và không chỉ có 1 file mà có khá nhiều file, mỗi file sẽ có 1 phạm vi ảnh hưởng nhất định trong ứng dụng.</li>
+</ul>
+<p><strong>Lưu ý:</strong> ở bài viết này mình sẽ sử dụng Kotlin để viết những file cấu hình, nên các file sẽ có dạng .gradle.kts. Còn trong ảnh là mình lấy trên mạng nên không tiện chỉnh sửa lại, sorry all!</p>
+<h3 id="3-1-The-Gradle-settings-file"><a href="#3-1-The-Gradle-settings-file" class="headerlink" title="3.1. The Gradle settings file"></a>3.1. The Gradle settings file</h3><ul>
+<li>Nằm ở ngoài cùng proejct (root project)</li>
+<li>Tên file là <strong>setting.gradle.kts</strong></li>
+<li>Dùng để định nghĩa những module có trong 1 ứng dụng. Thông thường khi tạo mới project, nội dụng file như sau:</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">include(<span class="string">&quot;app&quot;</span>)</span><br><span class="line"><span class="comment">// hoặc</span></span><br><span class="line">include(<span class="string">&quot;:app&quot;</span>)</span><br><span class="line"><span class="comment">// cả 2 cách viết trên đều như nhau</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Khi ứng dụng có nhiều module, thì các module sẽ được include vào đây:<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">include(<span class="string">&quot;app&quot;</span>, <span class="string">&quot;data&quot;</span>, <span class="string">&quot;domain&quot;</span>)</span><br><span class="line"><span class="comment">// hoặc có thể viết riêng lẻ</span></span><br><span class="line">include(<span class="string">&quot;app&quot;</span>)</span><br><span class="line">include(<span class="string">&quot;data&quot;</span>)</span><br><span class="line">include(<span class="string">&quot;domain)</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="3-2-The-top-level-build-file"><a href="#3-2-The-top-level-build-file" class="headerlink" title="3.2. The top-level build file"></a>3.2. The top-level build file</h3><ul>
+<li>Nằm ở ngoài cùng proejct (root project)</li>
+<li>Tên file là <strong>build.gradle.kts</strong></li>
+<li>Dùng để config nhưng thứ cơ bản dùng chung cho tất cả module của ứng dụng</li>
+<li>Sử dụng 1 số block build như <strong>buildscript</strong>, <strong>allprojects</strong><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* - Block này config những repositories và dependencies cho chính nó</span></span><br><span class="line"><span class="comment">* - Không nên config những dependencies cho các module ở đây, mà nên config ở từng module riêng lẻ</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">buildscript &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * - Block này config những repositories Gradle có thể tìm kiếm và tải xuống</span></span><br><span class="line"><span class="comment">    * - Các repositories có thể là remote(google, jcenter, maven central, ivy) hoặc local</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    repositories &#123;</span><br><span class="line">        google()</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * - Block này confign những dependencies Gradle cần trong quá trình build ứng dụng</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    dependencies &#123;</span><br><span class="line">        classpath(kotlin(module = <span class="string">&quot;gradle-plugin&quot;</span>, version = <span class="string">&quot;1.3.72&quot;</span>))</span><br><span class="line">        classpath(<span class="string">&quot;com.android.tools.build:gradle:4.0.0)</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">/**</span></span><br><span class="line"><span class="string">* - Block này config những repositories và dependencies được sử dụng cho tất cả các module trong project</span></span><br><span class="line"><span class="string">* - Không nên config những dependencies cho các module ở đây, mà nên config ở từng module riêng lẻ</span></span><br><span class="line"><span class="string">*/</span></span><br><span class="line"><span class="string">allprojects &#123;</span></span><br><span class="line"><span class="string">    repositories &#123;</span></span><br><span class="line"><span class="string">        google()</span></span><br><span class="line"><span class="string">        jcenter()</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<blockquote>
+<p>Configure project-wide properties: định nghĩa các biến ở mức root project</p>
+</blockquote>
+<ul>
+<li>Cho phép định nghĩa các biến được sử dụng cho tất cả các module trong project</li>
+<li>Sử dụng block <strong>ext</strong></li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">buildscript &#123;...&#125;</span><br><span class="line"></span><br><span class="line">allprojects &#123;...&#125;</span><br><span class="line"></span><br><span class="line">ext &#123;</span><br><span class="line">    <span class="comment">// định nghĩa các version của dependency</span></span><br><span class="line">    compileSdkVersion = <span class="number">28</span></span><br><span class="line">    supportLibVersion = <span class="string">&quot;28.0.0&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Để truy cập những biến này từ các module khác trong cùng project, sử dụng cú pháp <strong>rootProject.ext.property_name</strong><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">  compileSdkVersion rootProject.ext.compileSdkVersion</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line">...</span><br><span class="line">dependencies &#123;</span><br><span class="line">    implementation <span class="string">&quot;com.android.support:appcompat-v7:<span class="subst">$&#123;rootProject.ext.supportLibVersion&#125;</span>&quot;</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="3-3-The-module-level-build-file"><a href="#3-3-The-module-level-build-file" class="headerlink" title="3.3. The module-level build file"></a>3.3. The module-level build file</h3><ul>
+<li>Mỗi module thứ cấp, sẽ có 1 file <strong>build.gradle.kts</strong> riêng</li>
+<li>Thường dùng để cấu hình các thông tin như build types, product flavors, dependencies …</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * cấu hình Android plugin</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">plugins &#123;</span><br><span class="line">    id(<span class="string">&#x27;com.android.application&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * cấu hình riêng cho Android</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">android &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * compileSdkVersion: chỉ định Android API level để Gradle sử dụng cho app</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"></span><br><span class="line">  compileSdkVersion(<span class="number">28</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * - buildToolsVersion: chỉ định phiên bản của SDK build tools, command-line và compiler</span></span><br><span class="line"><span class="comment">   * - Thuộc tính này là 1 tùy chọn vì nó thường được lấy mặc định theo Android Studio</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"></span><br><span class="line">  buildToolsVersion(<span class="string">&quot;29.0.2&quot;</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Block này chứa config chung cho tất cả các build variant, ghi đè 1 số thuộc tính trong file main/AndroidManifest.xml</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"></span><br><span class="line">  defaultConfig &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * - applicationId là định danh duy nhất cho 1 ứng dụng</span></span><br><span class="line"><span class="comment">     * - Mặc định, applicationId được lấy theo tên package trong file main/AndroidManifet.xml</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    applicationId = <span class="string">&#x27;com.example.myapp&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Chỉ định API level nhỏ nhất có thể chạy được ứng dụng</span></span><br><span class="line">    minSdkVersion(<span class="number">15</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Chỉ định API level được sử dụng để kiểm thử ứng dụng</span></span><br><span class="line">    targetSdkVersion(<span class="number">28</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Chỉ định version cho ứng dụng</span></span><br><span class="line">    versionCode = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Chỉ định version cho ứng dụng để người dùng có thê nhìn thấy</span></span><br><span class="line">    versionName = <span class="string">&quot;1.0&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * - Block này dùng để cấu hình các buile type</span></span><br><span class="line"><span class="comment">   * - Mặc định, hệ thống tự định nghĩa 2 build types: debug và release</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"></span><br><span class="line">  buildTypes &#123;</span><br><span class="line"></span><br><span class="line">    getByName(<span class="string">&quot;đebug&quot;</span>) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    getByName(<span class="string">&quot;release&quot;</span>) &#123;</span><br><span class="line">        isMinifyEnabled = <span class="literal">true</span> <span class="comment">// cho phép rút gọn code khi build.</span></span><br><span class="line">        proguardFile(<span class="string">&#x27;proguard-rules.pro&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * - Block này là 1 tùy chọn, dùng để tạo ra các product flavor</span></span><br><span class="line"><span class="comment">   * - Ví dụ này tạo ra 2 product flavor: 1 bản free và 1 bản mất phí. </span></span><br><span class="line"><span class="comment">   * - Tương ứng với mỗi bản sẽ có những cấu hình khác nhau. Các cấu hình này sẽ được ghi đè với các cấu hình trước nếu đã có.</span></span><br><span class="line"><span class="comment">   * - Nếu bạn khai báo product flavors, thì phải chỉ định flavor dimensions cho nó</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"></span><br><span class="line">  flavorDimensions(<span class="string">&quot;tier&quot;</span>)</span><br><span class="line">  productFlavors &#123;</span><br><span class="line">    create(free) &#123;</span><br><span class="line">      applicationId = <span class="string">&#x27;com.example.myapp.free&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    paid &#123;</span><br><span class="line">      applicationId = <span class="string">&#x27;com.example.myapp.paid&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * - Block này chứa các dependencies từ local hoặc remote</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    implementation(project(<span class="string">&quot;:lib&quot;</span>))</span><br><span class="line">    implementation(<span class="string">&#x27;com.android.support:appcompat-v7:28.0.0&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-4-Source-sets"><a href="#3-4-Source-sets" class="headerlink" title="3.4. Source sets"></a>3.4. Source sets</h3><ul>
+<li><p>Android Studio tổng hợp các mã nguồn và tài nguyên thành 1 nhóm gọi là <strong>source sets</strong> với tất cả các bản build</p>
+</li>
+<li><p>Source sets là 1 tùy chọn do vậy Android Studio không tự động sinh ra khi bạn cấu hình các bản build</p>
+</li>
+<li><p>Mặc định, Android Studio chỉ tạo ra sources sets ở đường dẫn</p>
+<blockquote>
+<p>src/main // được sử dụng cho tất cả các bản build</p>
+</blockquote>
+</li>
+<li><p>Ngoài ra, bạn có thể tạo ra các source sets với các đường dẫn tương ứng phụ thuộc vào build type và product flavor.</p>
+<blockquote>
+<p>src/buildType/<br>src/productFlavor/<br>src/productFlavorBuildType/</p>
+</blockquote>
+</li>
+<li><p>Nếu có nhiều source sets khác nhau trong project, thì thứ tự ưu tiên của các source sets được sử dụng cho việc build là:</p>
+<blockquote>
+<p>build variant &gt; build type &gt; product flavor &gt; main source set &gt; library dependencies</p>
+</blockquote>
+</li>
+</ul>
+<p>Okay, trên đây là những gì tổng quan nhất về việc cấu hình build cho 1 ứng dụng Android. Các bài viết sau mình sẽ đi chi tiết vào từng phần, hẹn gặp lại m.n ở những phần tiếp theo.</p>
+<p>Tài liệu tham khảo: <a target="_blank" rel="noopener" href="https://developer.android.com/studio/build">Config your build</a></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>Liên kết bài viết：</strong>
+      <a href="https://nvquangth.github.io/2020/08/25/configure-build-gradle-p1/" title="Tổng quan về Android build config" target="_blank" rel="external">https://nvquangth.github.io/2020/08/25/configure-build-gradle-p1/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>Bản quyền： </strong> Nếu bài viết có sử dụng hình ảnh, nội dung của bạn, hãy liên hệ tác giả để cùng xử lý nhé!
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/nvquangth" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/nvquangth" target="_blank"><span class="text-dark">Nguyễn Văn Quang</span><small class="ml-1x">Mobile Developer</small></a></h3>
+        <div>quangnv</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/09/13/interviews-p1/" title="Tổng hợp những câu hỏi về Android - Phần 1"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2020/08/20/the-clean-architecture/" title="The Clean Architecture"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Write a response...',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

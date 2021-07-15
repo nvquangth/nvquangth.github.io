@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Xây dựng cấu trúc dữ liệu Stack và Queue | My blog</title>
+  <meta name="description" content="Lời mở đầuHello các bạn, hôm nay mình sẽ chia sẻ với các bạn cách để có thể tự xây dựng 2 loại cấu trúc dữ liệu stack(ngăn xếp) và queue(hàng đợi) sử dụng mảng trong C++; Thông thường, trong quá trình">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Xây dựng cấu trúc dữ liệu Stack và Queue">
+<meta property="og:url" content="https://nvquangth.github.io/2020/08/16/cach-xay-dung-cau-truc-du-lieu-stack-va-queue/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Lời mở đầuHello các bạn, hôm nay mình sẽ chia sẻ với các bạn cách để có thể tự xây dựng 2 loại cấu trúc dữ liệu stack(ngăn xếp) và queue(hàng đợi) sử dụng mảng trong C++; Thông thường, trong quá trình">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://images.viblo.asia/4399b6f2-7d4f-4f8e-9014-a6978aa41409.png">
+<meta property="og:image" content="https://images.viblo.asia/53a48f0e-d6a7-4e1b-9a8f-05ccd200bf33.jpg">
+<meta property="article:published_time" content="2020-08-16T12:55:47.000Z">
+<meta property="article:modified_time" content="2021-07-09T03:54:41.837Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="data-structure">
+<meta property="article:tag" content="stack">
+<meta property="article:tag" content="queue">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.viblo.asia/4399b6f2-7d4f-4f8e-9014-a6978aa41409.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://nvquangth.github.io/2020/08/16/cach-xay-dung-cau-truc-du-lieu-stack-va-queue/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/nvquangth" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Nguyễn Văn Quang</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Mobile Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Hà Nội, Việt Nam</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a><span class="archive-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/09/interviews-p4/" class="title">Tổng hợp những câu hỏi về Android - Phần 4</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-09T04:01:02.000Z" itemprop="datePublished">2021-07-09</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/11/25/privacy-change-android-10/" class="title">Một số lưu ý thay đổi liên quan đến External Storage trên Android 10(API 29)</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-11-25T08:07:07.000Z" itemprop="datePublished">2020-11-25</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/11/13/the-clean-architecture-p2/" class="title">The Clean Architecture - Part 2</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-11-13T04:12:51.000Z" itemprop="datePublished">2020-11-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/26/interviews-p3/" class="title">Tổng hợp những câu hỏi về Android - Phần 3</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-26T05:56:14.000Z" itemprop="datePublished">2020-09-26</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/20/interviews-p2/" class="title">Tổng hợp những câu hỏi về Android - Phần 2</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-20T06:56:41.000Z" itemprop="datePublished">2020-09-20</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-cach-xay-dung-cau-truc-du-lieu-stack-va-queue" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Xây dựng cấu trúc dữ liệu Stack và Queue
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/08/16/cach-xay-dung-cau-truc-du-lieu-stack-va-queue/" class="article-date">
+	  <time datetime="2020-08-16T12:55:47.000Z" itemprop="datePublished">2020-08-16</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/C/" rel="tag">C++</a>, <a class="article-tag-link-link" href="/tags/data-structure/" rel="tag">data-structure</a>, <a class="article-tag-link-link" href="/tags/queue/" rel="tag">queue</a>, <a class="article-tag-link-link" href="/tags/stack/" rel="tag">stack</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/08/16/cach-xay-dung-cau-truc-du-lieu-stack-va-queue/#comments" class="article-comment-link">Comments</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h3 id="Loi-mo-dau"><a href="#Loi-mo-dau" class="headerlink" title="Lời mở đầu"></a>Lời mở đầu</h3><p>Hello các bạn, hôm nay mình sẽ chia sẻ với các bạn cách để có thể tự xây dựng 2 loại cấu trúc dữ liệu stack(ngăn xếp) và queue(hàng đợi) sử dụng mảng trong C++;</p>
+<p>Thông thường, trong quá trình làm việc mình nghĩ chắc hẳn đã có nhiều bạn đã từng làm việc với 2 loại cấu trúc dữ liệu này. Và hầu hết là các bạn đều sử dụng các lớp Stack, Queue được xây dựng sẵn của ngôn ngữ lập trình. Vậy đã bao giờ bạn nghĩ rằng Stack và Queue được xây dựng như thế nào? Và liệu rằng chính mình có tự xây dựng nó được không? Mình sẽ trả lời giúp bạn là “Có, hoàn toàn có thể luôn”.</p>
+<p>Vậy trước khi đi vào việc xây dựng nó, mình sẽ lướt qua 1 chút kiến thức cơ bản về 2 loại cấu trúc này nhé.</p>
+<h3 id="1-Gioi-thieu-ve-Stack-va-Queue"><a href="#1-Gioi-thieu-ve-Stack-va-Queue" class="headerlink" title="1. Giới thiệu về Stack và Queue."></a>1. Giới thiệu về Stack và Queue.</h3><h4 id="1-1-Stack"><a href="#1-1-Stack" class="headerlink" title="1.1 Stack"></a>1.1 Stack</h4><p>Stack hay còn gọi là ngăn xếp, là 1 loại cấu trúc dữ liệu trừu tượng hoạt động theo nguyên lý “Vào Sau Ra Trước” - Last In First Out(LIFO).</p>
+<p><img src="https://images.viblo.asia/4399b6f2-7d4f-4f8e-9014-a6978aa41409.png"></p>
+<p>Hình vẽ trên mô tả khá rõ về cấu trúc của 1 stack như đã định nghĩa. Để dễ hình dùng hơn, mình sẽ lấy 1 ví dụ cụ thể như này. Ví dụ bạn có 1 giá sách, nếu bạn muốn thêm 1 quyển sách mới vào giá, bạn chỉ việc đặt quyển sách đó lên đỉnh của giá. Hoặc nếu bạn muốn lấy 1 quyển sách từ giá, bạn chỉ việc lấy quyển sách đầu tiên ra khỏi giá.<br>Ngăn xếp đơn giản phải không nào! Vì vậy các thao tác với ngăn xếp cũng đơn giản thôi. Đây là một số thao tác cơ bản với ngăn xếp:</p>
+<ol>
+<li>push: đẩy 1 phần thử vào đầu ngăn xếp.</li>
+<li>pop: xóa 1 phần tử đầu khỏi ngăn xếp.</li>
+<li>peek: lấy 1 phần tử đầu của ngăn xếp mà không xóa phần tử đó.</li>
+<li>isFull: kiểm tra ngăn xếp đã đầy chưa.</li>
+<li>isEmpty: kiểm tra ngăn xếp có rỗng không.<ul>
+<li><strong>Chú ý:</strong> Tất cả các thao tác với ngăn xếp chỉ tác động đến phần tử ở đầu ngăn xếp.</li>
+</ul>
+</li>
+</ol>
+<p>OK, về stack mình chỉ nói ngắn gọn vậy thôi. Có thời gian mình sẽ viết chi tiết thêm nữa hoặc bạn tự tìm hiểu nhé. Bây giờ mình chuyển qua tìm hiểu Queue xem nó thế nào nhé! Let’s go.</p>
+<h4 id="1-2-Queue"><a href="#1-2-Queue" class="headerlink" title="1.2 Queue"></a>1.2 Queue</h4><p>Queue hay còn gọi là hàng đợi, là 1 loại cấu trúc dữ liệu trừu tượng hoạt động theo nguyên lý “Vào Trước Ra Trước” - First In First Out(FIFO).</p>
+<p><img src="https://images.viblo.asia/53a48f0e-d6a7-4e1b-9a8f-05ccd200bf33.jpg"></p>
+<p>Hình vẽ này cũng mô tả khá rõ về cấu trúc của 1 hàng đợi. Tuy nhiên mình muốn lấy 1 ví dụ thực tế hơn cho các bạn dễ hình dung. Ví dụ khi bạn vào 1 quầy bán vé xem phim, người bán thì chỉ có 1, còn người mua thì rất đông. Vì vậy các bạn phải xếp hàng lần lượt để đợi. Như vậy, bạn nào xếp hàng trước thì sẽ mua được vé trước, bạn nào vào sau thì mua sau. (Tuy nhiên, thực tế thì không phải lúc nào cũng vậy :’()</p>
+<p>Hàng đợi cũng không phải cái gì cao siêu đúng không các bạn. Do đó khi làm việc với hàng đợi cũng có một số thao tác cơ bản sau:</p>
+<ol>
+<li>enqueue: thêm 1 phần tử vào hàng đợi.</li>
+<li>dequeue: xóa 1 phần tử khỏi hàng đợi.</li>
+<li>peek: lấy 1 phần tử đầu của hàng đợi mà không xóa nó.</li>
+<li>isFull: kiểm tra hàng đợi đã đầy chưa.</li>
+<li>isEmpty: kiểm tra hàng đợi có rỗng không.</li>
+</ol>
+<p><strong>Chú ý:</strong> Tất cả các thao tác với hàng đợi sẽ tác động đến phần tử đầu và cuối của hàng đợi.</p>
+<p>Đến đây, mình đã cung cấp cho các bạn những hiểu biết cơ bản nhất về ngăn xếp và hàng đợi rồi đấy. Bây giờ mình sẽ hướng dẫn dẫn các bạn cách xây dựng cụ thể của từng loại như thế nào nhé. Đâu tiên là stack nha.<br>À, ở phần xây dựng này mình sử dụng C++ để code nha, các bạn có thể sử dụng Java hoặc ngôn ngữ nào mà bạn thích để làm theo. Mình nghĩ việc xây dựng bằng ngôn ngữ khác cũng không khác nhau là mấy đâu, quan trọng là ở cái logic thôi. Ahihi (^_^)</p>
+<h3 id="2-Xay-dung-Stack"><a href="#2-Xay-dung-Stack" class="headerlink" title="2. Xây dựng Stack"></a>2. Xây dựng Stack</h3><p> Đầu tiên mình sẽ thực hiện khởi tạo stack với các thông tin: vị trí top(đỉnh ngăn xếp), kích thước ngăn xếp</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; định nghĩa kích thước của ngăn xếp</span><br><span class="line">int size &#x3D; 100;</span><br><span class="line">&#x2F;&#x2F; tạo 1 biến để xác định vị trí đầu ngăn xếp</span><br><span class="line">int top &#x3D; 0;</span><br><span class="line">&#x2F;&#x2F; khai báo 1 mảng để tạo ngăn xếp</span><br><span class="line">int stack[100];</span><br></pre></td></tr></table></figure>
+<p> Tiếp theo là việc định nghĩa các phương thức tương ứng với các thao tác như bên trên mình đã nói.</p>
+<ul>
+<li><p><strong>isEmpty</strong>: kiểm tra ngăn xếp có rỗng không</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bool isEmpty() &#123;</span><br><span class="line">    return top &#x3D;&#x3D; 0 ? true : false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>isFull</strong>: kiểm tra xem ngăn xếp đã đầy chưa</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bool isFull() &#123;</span><br><span class="line">    return top &#x3D;&#x3D; size ? true : false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>push</strong>: đưa 1 phần tử vào đầu ngăn xếp</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void push(int item) &#123;</span><br><span class="line">    if (isFull()) &#123;</span><br><span class="line">        cout &lt;&lt; &quot;Ngăn xếp đầy rùi má ơi, không push được nữa đâu!&quot; &lt;&lt; endl;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    top++;</span><br><span class="line">    stack[top] &#x3D; item;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>pop</strong>: xóa 1 phần tử khỏi đầu ngăn xếp</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void pop() &#123;</span><br><span class="line">    if (isEmpty()) &#123;</span><br><span class="line">        cout &lt;&lt; &quot;Uầy, ngăn xếp rỗng má ơi, có gì đâu mà pop!&quot;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    stack[top] &#x3D; 0;</span><br><span class="line">    top--;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>peek: lấy 1 phần tử đầu ngăn xếp mà không xóa nó</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int peek() &#123;</span><br><span class="line">    return stack[top];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>OK, vậy là bạn đã xây dựng xong các thao tác cơ bản với stack rồi đó, cũng không có gì làm khó bạn đúng không nào. Đây là chương trình đầy đủ khi ghép nối các phương thức trên lại với nhau.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">int size &#x3D; 10;</span><br><span class="line">int top &#x3D; -1;</span><br><span class="line">int stack[10];</span><br><span class="line"></span><br><span class="line">bool isEmpty() &#123;</span><br><span class="line">    return top &#x3D;&#x3D; -1 ? true : false;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">bool isFull() &#123;</span><br><span class="line">    return top &#x3D;&#x3D; size ? true : false;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void push(int item) &#123;</span><br><span class="line">    if (isFull()) &#123;</span><br><span class="line">        cout &lt;&lt; &quot;Ngăn xếp đầy rùi má ơi, không push được nữa đâu!&quot; &lt;&lt; endl;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    top++;</span><br><span class="line">    stack[top] &#x3D; item;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void pop() &#123;</span><br><span class="line">    if (isEmpty()) &#123;</span><br><span class="line">        cout &lt;&lt; &quot;Uầy, ngăn xếp rỗng má ơi, có gì đâu mà pop!&quot; &lt;&lt; endl;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    stack[top] &#x3D; 0;</span><br><span class="line">    top--;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int peek() &#123;</span><br><span class="line">    return stack[top];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    &#x2F;&#x2F; gọi các thao tác với stack ở đây</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Tiếp theo sẽ là queue nhé</p>
+<h3 id="3-Xay-dung-Queue"><a href="#3-Xay-dung-Queue" class="headerlink" title="3. Xây dựng Queue"></a>3. Xây dựng Queue</h3><p>Đầu tiên thì vẫn là việc khởi tạo queue, tương tự như stack thôi mà :)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; định nghĩa kích thước của hàng đợi</span><br><span class="line">int size &#x3D; 10;</span><br><span class="line">&#x2F;&#x2F; đánh dấu vị trí đầu hàng đợi</span><br><span class="line">int front &#x3D; 0;</span><br><span class="line">&#x2F;&#x2F; đánh dấu vị trí cuối hàng đợi</span><br><span class="line">int rear &#x3D; -1;</span><br><span class="line">&#x2F;&#x2F; khai báo 1 mảng để tạo hàng đợi</span><br><span class="line">int queue[10];</span><br></pre></td></tr></table></figure>
+<p>Tiếp theo mình sẽ định nghĩa các thao tác với hàng đợi.</p>
+</li>
+<li><p><strong>isEmpty():</strong> kiểm tra hàng đợi có rỗng không.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bool isEmpty() &#123;</span><br><span class="line">    return (front &lt; 0 || front &gt; rear) ? true : false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>isFull():</strong> kiểm tra hàng đợi đã đầy chưa.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bool isFull() &#123;</span><br><span class="line">    return rear &#x3D;&#x3D; size - 1 ? true : false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>enqueue:</strong> thêm 1 phần tử vào hàng đợi.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void enqueue(int item) &#123;</span><br><span class="line">    if (isFull()) &#123;</span><br><span class="line">        cout &lt;&lt; &quot;Hàng đợi đầy rùi má ơi, không enqueue được nữa đâu!&quot; &lt;&lt; endl;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    rear++;</span><br><span class="line">    queue[rear] &#x3D; item;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>dequeue():</strong> xóa 1 phần tử khỏi hàng đợi.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void dequeue() &#123;</span><br><span class="line">    if (isEmpty()) &#123;</span><br><span class="line">        cout &lt;&lt; &quot;Uầy, hàng đợi rỗng má ơi, có gì đâu mà dequeue!&quot; &lt;&lt; endl;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    queue[front] &#x3D; 0;</span><br><span class="line">    front++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>peek():</strong> lấy phần tử đầu của hàng đợi mà không xóa nó.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int peek() &#123;</span><br><span class="line">    return queue[front];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Yeh, vậy là cũng xong việc xây dựng các thao tác với queue rồi đó các bạn, công việc còn lại là ghép code nữa thôi. Đây là chương trình hoàn chỉnh sau khi ghép nối các phương thức.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">int size &#x3D; 10;</span><br><span class="line">int front &#x3D; 0;</span><br><span class="line">int rear &#x3D; -1;</span><br><span class="line">int queue[10];</span><br><span class="line"></span><br><span class="line">bool isEmpty() &#123;</span><br><span class="line">    return (front &lt; 0 || front &gt; rear) ? true : false;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">bool isFull() &#123;</span><br><span class="line">    return rear &#x3D;&#x3D; size - 1 ? true : false;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void enqueue(int item) &#123;</span><br><span class="line">    if (isFull()) &#123;</span><br><span class="line">        cout &lt;&lt; &quot;Hàng đợi đầy rùi má ơi, không enqueue được nữa đâu!&quot; &lt;&lt; endl;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    rear++;</span><br><span class="line">    queue[rear] &#x3D; item;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void dequeue() &#123;</span><br><span class="line">    if (isEmpty()) &#123;</span><br><span class="line">        cout &lt;&lt; &quot;Uầy, hàng đợi rỗng má ơi, có gì đâu mà dequeue!&quot; &lt;&lt; endl;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    queue[front] &#x3D; 0;</span><br><span class="line">    front++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int peek() &#123;</span><br><span class="line">    return queue[front];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    &#x2F;&#x2F; gọi các thao tác với queue ở đây</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Ket-luan"><a href="#Ket-luan" class="headerlink" title="Kết luận"></a>Kết luận</h3><p>Trên đây, là những chia sẻ của mình về Stack và Queue. Như mình có nói ở phần mở đầu, trong thực tế khi bạn đi làm, rất ít khi bạn phải tự xây dựng lại những loại cấu trúc dữ liệu dạng này. Vì hầu hết chúng đã được tích hợp sẵn trong các ngôn ngữ lập trình rồi. Tuy nhiên, khi sử dụng các loại cấu trúc dữ liệu như này thì các bạn cũng nên biết sâu một chút về nó thì vẫn tốt hơn. Mình hy vọng qua bài biết này, các bạn sẽ nắm được những kiến thức cơ bản như: cách thức hoạt động, các thao tác và cách để xây dựng được 2 loại cấu trúc này. Bài viết trên mình đang sử dụng mảng trong C++ để cài đặt. Các bạn hoàn toàn có thể sử dụng ngôn ngữ khác như: java, c#… và cấu trúc khác như: danh sách liên kết, … để cài đặt theo ý mình. Chúc các bạn thành công. Trong quá trình viết bài không tránh khỏi những thiếu sót, rất mong được sự phản hồi góp ý từ các bạn để bài viết được tốt hơn. Thanks all!</p>
+</li>
+</ul>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>Liên kết bài viết：</strong>
+      <a href="https://nvquangth.github.io/2020/08/16/cach-xay-dung-cau-truc-du-lieu-stack-va-queue/" title="Xây dựng cấu trúc dữ liệu Stack và Queue" target="_blank" rel="external">https://nvquangth.github.io/2020/08/16/cach-xay-dung-cau-truc-du-lieu-stack-va-queue/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>Bản quyền： </strong> Nếu bài viết có sử dụng hình ảnh, nội dung của bạn, hãy liên hệ tác giả để cùng xử lý nhé!
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/nvquangth" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/nvquangth" target="_blank"><span class="text-dark">Nguyễn Văn Quang</span><small class="ml-1x">Mobile Developer</small></a></h3>
+        <div>quangnv</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/08/20/the-clean-architecture/" title="The Clean Architecture"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+    </li>
+    
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Write a response...',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

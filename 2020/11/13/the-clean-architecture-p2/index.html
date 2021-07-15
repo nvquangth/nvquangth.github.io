@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>The Clean Architecture - Part 2 | My blog</title>
+  <meta name="description" content="Ở phần 1, mình đã trình bày những kiến thức cơ bản liên quan đến Clean Architecture. Phần này mình sẽ đi cụ thể về cách triển khai nó cho 1 dự án Android. Dự án: The Movie DbYêu cầu Login: login done">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The Clean Architecture - Part 2">
+<meta property="og:url" content="https://nvquangth.github.io/2020/11/13/the-clean-architecture-p2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Ở phần 1, mình đã trình bày những kiến thức cơ bản liên quan đến Clean Architecture. Phần này mình sẽ đi cụ thể về cách triển khai nó cho 1 dự án Android. Dự án: The Movie DbYêu cầu Login: login done">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://nvquangth.github.io/.com//clean-architecture.png">
+<meta property="og:image" content="https://nvquangth.github.io/.com//android-library-module.png">
+<meta property="og:image" content="https://nvquangth.github.io/.com//java-kotlin-library-module.png">
+<meta property="article:published_time" content="2020-11-13T04:12:51.000Z">
+<meta property="article:modified_time" content="2021-07-09T03:54:41.840Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="clean">
+<meta property="article:tag" content="architecture">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://nvquangth.github.io/.com//clean-architecture.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://nvquangth.github.io/2020/11/13/the-clean-architecture-p2/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/nvquangth" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Nguyễn Văn Quang</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Mobile Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Hà Nội, Việt Nam</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a><span class="archive-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/09/interviews-p4/" class="title">Tổng hợp những câu hỏi về Android - Phần 4</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-09T04:01:02.000Z" itemprop="datePublished">2021-07-09</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/11/25/privacy-change-android-10/" class="title">Một số lưu ý thay đổi liên quan đến External Storage trên Android 10(API 29)</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-11-25T08:07:07.000Z" itemprop="datePublished">2020-11-25</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/11/13/the-clean-architecture-p2/" class="title">The Clean Architecture - Part 2</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-11-13T04:12:51.000Z" itemprop="datePublished">2020-11-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/26/interviews-p3/" class="title">Tổng hợp những câu hỏi về Android - Phần 3</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-26T05:56:14.000Z" itemprop="datePublished">2020-09-26</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/20/interviews-p2/" class="title">Tổng hợp những câu hỏi về Android - Phần 2</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-20T06:56:41.000Z" itemprop="datePublished">2020-09-20</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-the-clean-architecture-p2" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      The Clean Architecture - Part 2
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/11/13/the-clean-architecture-p2/" class="article-date">
+	  <time datetime="2020-11-13T04:12:51.000Z" itemprop="datePublished">2020-11-13</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/architecture/" rel="tag">architecture</a>, <a class="article-tag-link-link" href="/tags/clean/" rel="tag">clean</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/11/13/the-clean-architecture-p2/#comments" class="article-comment-link">Comments</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>Ở <a href="https://nvquangth.github.io/2020/08/20/the-clean-architecture/">phần 1</a>, mình đã trình bày những kiến thức cơ bản liên quan đến Clean Architecture. Phần này mình sẽ đi cụ thể về cách triển khai nó cho 1 dự án Android.</p>
+<h4 id="Du-an-The-Movie-Db"><a href="#Du-an-The-Movie-Db" class="headerlink" title="Dự án: The Movie Db"></a>Dự án: The Movie Db</h4><h4 id="Yeu-cau"><a href="#Yeu-cau" class="headerlink" title="Yêu cầu"></a>Yêu cầu</h4><ul>
+<li>Login: login done -&gt; danh sách movies</li>
+<li>Logout: logout done -&gt; login screen</li>
+<li>Danh sách movies: click 1 movie -&gt; chi tiết movie</li>
+<li>Chi tiết movie</li>
+<li>Tìm kiêm movie theo tên</li>
+<li>Cho phép người dùng thay đổi theme ứng dụng</li>
+<li>Hiẹn loading khi tải dữ liệu</li>
+<li>Thông báo khi có lỗi xảy ra</li>
+</ul>
+<h4 id="Tai-lieu"><a href="#Tai-lieu" class="headerlink" title="Tài liệu"></a>Tài liệu</h4><ul>
+<li>Login, logout: ko có API chỉ cần làm đúng flow</li>
+<li>BASE_URL: <a target="_blank" rel="noopener" href="https://api.themoviedb.org/">https://api.themoviedb.org</a></li>
+<li>YOUR_API_KEY: xxx</li>
+<li>API lấy danh sách movie: <a target="_blank" rel="noopener" href="https://api.themoviedb.org/3/movie/popular?api_key=YOUR_API_KEY">https://api.themoviedb.org/3/movie/popular?api_key=YOUR_API_KEY</a></li>
+<li>API lấy chi tiết movie: <a target="_blank" rel="noopener" href="https://api.themoviedb.org/3/movie/%7Bmovie_id%7D?api_key=YOUR_API_KEY">https://api.themoviedb.org/3/movie/{movie_id}?api_key=YOUR_API_KEY</a></li>
+<li>API tìm kiếm movie: <a target="_blank" rel="noopener" href="https://api.themoviedb.org/3/search/movie?api_key=API_KEY&amp;query=YOUR_QUERY&amp;page=PAGE_NUMBER">https://api.themoviedb.org/3/search/movie?api_key=API_KEY&amp;query=YOUR_QUERY&amp;page=PAGE_NUMBER</a></li>
+</ul>
+<p><img src="/.com//clean-architecture.png"></p>
+<h3 id="1-Cong-nghe-ap-dung"><a href="#1-Cong-nghe-ap-dung" class="headerlink" title="1. Công nghệ áp dụng"></a>1. Công nghệ áp dụng</h3><h4 id="Jetpack-component"><a href="#Jetpack-component" class="headerlink" title="Jetpack component"></a>Jetpack component</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=2k8x8V77CrU">Single Activity</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.android.com/guide/navigation">Navigation</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/viewmodel">ViewModel</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/architecture/livedata">LiveData</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/data-binding">Data Binding</a></li>
+</ul>
+<blockquote>
+<p>view more component at <a target="_blank" rel="noopener" href="https://developer.android.com/jetpack/androidx/explorer">https://developer.android.com/jetpack/androidx/explorer</a></p>
+</blockquote>
+<h4 id="UI-component"><a href="#UI-component" class="headerlink" title="UI component"></a>UI component</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://material.io/">Material Design</a></li>
+</ul>
+<blockquote>
+<p>how to use theme, style</p>
+<p>sample: <a target="_blank" rel="noopener" href="https://github.com/material-components/material-components-android-examples">https://github.com/material-components/material-components-android-examples</a></p>
+</blockquote>
+<h4 id="API-Network"><a href="#API-Network" class="headerlink" title="API Network"></a>API Network</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://square.github.io/retrofit/">Retrofit</a></li>
+<li><a target="_blank" rel="noopener" href="https://square.github.io/okhttp/">OkHttp</a></li>
+</ul>
+<h4 id="Database"><a href="#Database" class="headerlink" title="Database"></a>Database</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://developer.android.com/training/data-storage/room">Room</a></li>
+</ul>
+<h4 id="Thread-amp-Asynchronous"><a href="#Thread-amp-Asynchronous" class="headerlink" title="Thread &amp; Asynchronous"></a>Thread &amp; Asynchronous</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/reference/coroutines-overview.html">Coroutines</a></li>
+</ul>
+<h4 id="Dependency-Injection"><a href="#Dependency-Injection" class="headerlink" title="Dependency Injection"></a>Dependency Injection</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://developer.android.com/training/dependency-injection/hilt-android">Hilt</a></li>
+</ul>
+<h4 id="Images"><a href="#Images" class="headerlink" title="Images"></a>Images</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://bumptech.github.io/glide/">Glide</a></li>
+</ul>
+<h4 id="Testing"><a href="#Testing" class="headerlink" title="Testing"></a>Testing</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://developer.android.com/training/testing/unit-testing/local-unit-tests">JUnit</a></li>
+<li><a target="_blank" rel="noopener" href="https://site.mockito.org/">Mockito</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.eclemma.org/jacoco/">Jacoco Reporter</a></li>
+</ul>
+<blockquote>
+<p>run test coverage: ./gradlew clean testDevDebugUnitTestCoverage</p>
+<p>view jacoco report at: app/build/reports/jacoco/testDevDebugUnitTestCoverage/html/index.html</p>
+<p>view more at gradle.build.kts file</p>
+</blockquote>
+<h4 id="Style-coding"><a href="#Style-coding" class="headerlink" title="Style coding"></a>Style coding</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://ktlint.github.io/">ktlint</a></li>
+</ul>
+<blockquote>
+<p>./gradlew ktlintCheck</p>
+<p>./gradlew ktlintFormat</p>
+</blockquote>
+<h3 id="2-Cau-truc-project"><a href="#2-Cau-truc-project" class="headerlink" title="2. Cấu trúc project"></a>2. Cấu trúc project</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">+-- app</span><br><span class="line">|   +-- model</span><br><span class="line">|   +-- di</span><br><span class="line">|   +-- ui</span><br><span class="line">|   +-- utils</span><br><span class="line">+-- data</span><br><span class="line">|   +-- model</span><br><span class="line">|   +-- di</span><br><span class="line">|   +-- remote</span><br><span class="line">|   +-- local</span><br><span class="line">|   +-- repository</span><br><span class="line">+-- domain</span><br><span class="line">|   +-- usecase</span><br><span class="line">|   +-- reopsitory</span><br><span class="line">+-- entity</span><br><span class="line">+-- base</span><br><span class="line">|   +-- ui</span><br><span class="line">|   +-- uikit</span><br></pre></td></tr></table></figure>
+
+<p>Về cơ bản bạn chỉ cần quan tâm đến 5 module lớn là app, base, data, domain, entity (ngoài ra còn 1 số module phụ dùng để cấu hình project, tiện ích…). Vậy các module này tương ứng khi tạo trên Android Studio sẽ như thế nào???</p>
+<ul>
+<li><strong>app</strong>: Android Application (module mặc định khi tạo mới project)</li>
+<li><strong>data, base</strong>: Android Library</li>
+</ul>
+<p><img src="/.com//android-library-module.png"></p>
+<ul>
+<li><strong>domain, entity</strong>: Java or Kotlin Library</li>
+</ul>
+<p><img src="/.com//java-kotlin-library-module.png"></p>
+<h3 id="3-Coding-entity-module"><a href="#3-Coding-entity-module" class="headerlink" title="3. Coding entity module"></a>3. Coding entity module</h3><ul>
+<li>Đây là module độc lập nhất, không bị phụ thuộc bởi module nào. Đây là nơi chứa các entity: Movie, User…</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">data class Movie(</span><br><span class="line">    val id: Int,</span><br><span class="line">    val title: String? &#x3D; null,</span><br><span class="line">    val posterPath: String? &#x3D; null,</span><br><span class="line">    val backdropPath: String? &#x3D; null,</span><br><span class="line">    val voteAverage: Float? &#x3D; null,</span><br><span class="line">    val overview: String? &#x3D; null,</span><br><span class="line">    val releaseDate: Long? &#x3D; null</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">data class Movie(</span><br><span class="line">    val id: Int,</span><br><span class="line">    val username: String,</span><br><span class="line">    val password: String</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-Coding-domain-module"><a href="#4-Coding-domain-module" class="headerlink" title="4. Coding domain module"></a>4. Coding domain module</h3><ul>
+<li>Module này có 1 phụ thuộc là entity module, do cần add thêm dependency trong gradle.</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">    implementation(project(Modules.entity))</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Đây là nơi định nghĩa các use case: login, logout, get movie, search movie…. Để việc thực hiện các use case này được trong suốt với database, network… và quan trọng là không vi phạm quy tắc của kiến trúc, thì sẽ cần có thêm các Repository Interface tương ứng.</li>
+</ul>
+<h3 id="5-Coding-data-module"><a href="#5-Coding-data-module" class="headerlink" title="5. Coding data module"></a>5. Coding data module</h3><h3 id="6-Coding-base-module"><a href="#6-Coding-base-module" class="headerlink" title="6. Coding base module"></a>6. Coding base module</h3><h3 id="7-Coding-app-module"><a href="#7-Coding-app-module" class="headerlink" title="7. Coding app module"></a>7. Coding app module</h3>
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>Liên kết bài viết：</strong>
+      <a href="https://nvquangth.github.io/2020/11/13/the-clean-architecture-p2/" title="The Clean Architecture - Part 2" target="_blank" rel="external">https://nvquangth.github.io/2020/11/13/the-clean-architecture-p2/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>Bản quyền： </strong> Nếu bài viết có sử dụng hình ảnh, nội dung của bạn, hãy liên hệ tác giả để cùng xử lý nhé!
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/nvquangth" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/nvquangth" target="_blank"><span class="text-dark">Nguyễn Văn Quang</span><small class="ml-1x">Mobile Developer</small></a></h3>
+        <div>quangnv</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/11/25/privacy-change-android-10/" title="Một số lưu ý thay đổi liên quan đến External Storage trên Android 10(API 29)"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2020/09/26/interviews-p3/" title="Tổng hợp những câu hỏi về Android - Phần 3"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Write a response...',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>The Clean Architecture | My blog</title>
+  <meta name="description" content="Với những ai đã từng phát triển phần mềm thì có lẽ đã từng bắt gặp 1 số kiến trúc phần mềm sau:  Hexagonal Architecture phát triển bởi  Onion Architecture phát triển bởi Jeffrey Palermo  Screaming Arc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The Clean Architecture">
+<meta property="og:url" content="https://nvquangth.github.io/2020/08/20/the-clean-architecture/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Với những ai đã từng phát triển phần mềm thì có lẽ đã từng bắt gặp 1 số kiến trúc phần mềm sau:  Hexagonal Architecture phát triển bởi  Onion Architecture phát triển bởi Jeffrey Palermo  Screaming Arc">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg">
+<meta property="article:published_time" content="2020-08-20T13:55:15.000Z">
+<meta property="article:modified_time" content="2021-07-09T03:54:41.843Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="clean">
+<meta property="article:tag" content="architecture">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://nvquangth.github.io/2020/08/20/the-clean-architecture/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/nvquangth" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Nguyễn Văn Quang</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Mobile Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Hà Nội, Việt Nam</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a><span class="archive-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/09/interviews-p4/" class="title">Tổng hợp những câu hỏi về Android - Phần 4</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-09T04:01:02.000Z" itemprop="datePublished">2021-07-09</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/11/25/privacy-change-android-10/" class="title">Một số lưu ý thay đổi liên quan đến External Storage trên Android 10(API 29)</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-11-25T08:07:07.000Z" itemprop="datePublished">2020-11-25</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/11/13/the-clean-architecture-p2/" class="title">The Clean Architecture - Part 2</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-11-13T04:12:51.000Z" itemprop="datePublished">2020-11-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/26/interviews-p3/" class="title">Tổng hợp những câu hỏi về Android - Phần 3</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-26T05:56:14.000Z" itemprop="datePublished">2020-09-26</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/20/interviews-p2/" class="title">Tổng hợp những câu hỏi về Android - Phần 2</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-20T06:56:41.000Z" itemprop="datePublished">2020-09-20</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-the-clean-architecture" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      The Clean Architecture
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/08/20/the-clean-architecture/" class="article-date">
+	  <time datetime="2020-08-20T13:55:15.000Z" itemprop="datePublished">2020-08-20</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/architecture/" rel="tag">architecture</a>, <a class="article-tag-link-link" href="/tags/clean/" rel="tag">clean</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/08/20/the-clean-architecture/#comments" class="article-comment-link">Comments</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>Với những ai đã từng phát triển phần mềm thì có lẽ đã từng bắt gặp 1 số kiến trúc phần mềm sau:</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="http://alistair.cockburn.us/Hexagonal+architecture">Hexagonal Architecture</a> phát triển bởi</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/">Onion Architecture</a> phát triển bởi Jeffrey Palermo</p>
+</li>
+<li><p>Screaming Architecture</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.amazon.com/Lean-Architecture-Agile-Software-Development/dp/0470684208/">DCI</a> phát triển bởi James Coplien, and Trygve Reenskaug</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.amazon.com/Object-Oriented-Software-Engineering-Approach/dp/0201544350">BCE</a> phát triển bởi Ivar Jacobson</p>
+</li>
+</ul>
+<p>Tất cả các kiến trúc trên đều hướng đến việc xây dựng một phần mềm đạt được những tiêu chí sau:</p>
+<ol>
+<li><p>Độc lập với các Frameworks. Kiến trúc không bị phụ thuộc vào một số thư viện. Điều này cho phép bạn sử dụng các Frameworks chỉ như là các công cụ thay vì hệ thống của bạn bị ràng buộc bởi chúng.</p>
+</li>
+<li><p>Có thể kiểm thử. Logic nghiệp vụ có thể dễ dàng kiểm thử mà không cần UI, Database, Web Server hoặc bất kỳ thành phần bên ngoài nào.</p>
+</li>
+<li><p>Độc lập với UI. Có thể thay đổi UI một cách dễ dàng mà không ảnh hưởng đến các phần còn lại của hệ thống. Ví dụ bạn có thể thay đổi Web UI bằng Mobile UI mà không làm ảnh hưởng đến các logic nghiệp vụ.</p>
+</li>
+<li><p>Độc lập với Cơ sở dữ liệu. Bạn có thể chuyển đổi linh hoạt giữa các loại Cơ sở dữ liệu như Oracle, SQL Server, MongoDb hay bất kỳ Cơ sở dữ liệu nào.</p>
+</li>
+<li><p>Độc lập với bất kỳ thành phần nào bên ngoài. Trong thực tế thì logic nghiệp vụ không có liên quan gì hay không biết gì về các thành phần bên ngoài nó.</p>
+</li>
+</ol>
+<p>Với những tiêu chí đặt ra ở trên, kết hợp với những kiến trúc trước đấy, Uncle Bob đã đưa ra 1 kiến trúc mới gọi là Clean Architecture. </p>
+<p><img src="https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg"></p>
+<p>Hình vẽ trên bao gồm các vòng tròn đồng tâm đại diện cho những tầng riêng biệt của phần mềm. Những vòng tròn bên trong là <strong>Policy</strong>, còn những vòng tròn bên ngoài là <strong>Mechanism</strong>. Vậy policy và mechainsm là gì?</p>
+<ul>
+<li><strong>Policy</strong> - chính sách: là 1 tập các ý tưởng hoặc kế hoạch để làm 1 việc gì đó (chứa logic nghiệp vụ)</li>
+<li><strong>Mechanism</strong> -  cơ chế: là 1 quá trình/kỹ thuật triển khai/thực thi các chính sách để đạt được kết quả (chứa implement chi tiết)</li>
+</ul>
+<p><strong>Clean Architecture</strong> là kiến trúc phần mềm được xây dựng dựa trên nguyên tắc sự phụ thuộc - The Dependency Rule.</p>
+<h2 id="The-Dependency-Rule"><a href="#The-Dependency-Rule" class="headerlink" title="The Dependency Rule"></a>The Dependency Rule</h2><blockquote>
+<p>Source code dependencies can only point inwards</p>
+</blockquote>
+<ul>
+<li>Các tầng bên ngoài chỉ có thể phụ thuộc vào các tầng bên trong và không có chiều ngược lại.</li>
+<li>Các tầng bên ngoài không hề biết gì về các tầng bên trong.</li>
+<li>Tên của bất kỳ thành phần nào của tầng bên ngoài không nên được đề cập đến ở các tầng bên trong. Ví dụ function, class, biến hay bất kỳ thực thể nào của hệ thống.</li>
+<li>Định dạng dữ liệu ở các tầng bên ngoài không nên được sử dụng bởi các tầng bên trong, đặc biệt là các định dạng dữ liệu được tạo ra bởi các Frameworks. Đơn giản vì không muốn có bất kỳ ảnh hưởng nào từ các tầng bên ngoài đến các tầng bên trong.</li>
+</ul>
+<h2 id="The-Properties-of-The-Dependency-Rule"><a href="#The-Properties-of-The-Dependency-Rule" class="headerlink" title="The Properties of The Dependency Rule"></a>The Properties of The Dependency Rule</h2><ul>
+<li>Khi đi từ trong ra ngoài tính policy giảm dần, đồng thời tính mechanism tằng dần và ngược lại.</li>
+<li>Càng vào trong mức độ trừu tượng của phần mềm càng tăng.</li>
+<li>Tầng trong cùng sẽ là chung nhất, tầng ngoài cùng sẽ là chi tiết nhất.</li>
+<li>Độc lập với các Frameworks, Database, UI</li>
+<li>Có thể kiểm thử</li>
+</ul>
+<h2 id="Entities"><a href="#Entities" class="headerlink" title="Entities"></a>Entities</h2><blockquote>
+<p>Entities encapsulate Enterprise wide business rules</p>
+</blockquote>
+<ul>
+<li>Phần mềm ở tầng này bao gồm các thực thể được sử dụng trong toàn hệ thống. Thực thể có thể là 1 đối tượng gồm nhiều phương thức hoặc có thể là 1 tập các cấu trúc dữ liệu và chức năng.</li>
+<li>Nếu bạn chỉ có 1 ứng dụng đơn lẻ thay vì 1 hệ thống lớn, thì lúc này các thực thể chính là các đối tượng được sử dụng trong các logic nghiệp vụ của ứng dụng. </li>
+<li>Các thực thể này được thiết kế nằm trong cùng của phần mềm nên chúng ít có khả năng bị thay đổi bởi các thành phần bên ngoài.</li>
+</ul>
+<h2 id="Use-Cases"><a href="#Use-Cases" class="headerlink" title="Use Cases"></a>Use Cases</h2><blockquote>
+<p>The software in this layer contains application specific business rules</p>
+</blockquote>
+<ul>
+<li>Phần mềm ở tầng này bao gồm các logic nghiệp vụ cụ thể của ứng dụng, cụ thể đó là tất cả các use case của hệ thống. Các use case này điều phối luồng dữ liệu đến và đi từ các thực thể.</li>
+<li>Khi các logic nghiêp vụ ở tầng này thay đổi cũng không làm ảnh hưởng đến tầng thực thể. Và các logic nghiệp vụ ở tầng này cũng không bị ảnh hưởng khi có sự thay đổi từ các thành phần bên ngoài như Cơ sở dữ liệu, UI hay bất kỳ Frameworks nào.</li>
+<li>Tuy nhiên, nếu ứng dụng thay đổi yêu cầu thì tất nhiên các logic nghiệp vụ ở tầng này sẽ bị thay đổi ít nhiều và sẽ có những ảnh hưởng nhất định đến 1 số phần code.</li>
+</ul>
+<h2 id="Interface-Adapters"><a href="#Interface-Adapters" class="headerlink" title="Interface Adapters"></a>Interface Adapters</h2><blockquote>
+<p>The software in this layer is a set of adapters that convert data between usecases, entities and Database, UI</p>
+</blockquote>
+<ul>
+<li>Phần mềm ở tầng này bao gồm 1 tập các adapter để chuyển đổi dữ liệu từ use cacse/entities thành định dạng dữ liệu phù hợp với các thành phần bên ngoài và ngược lại. Nếu bạn sử dụng mô hình MVC, MVP hay MVVM thì Controller, Presenter, ViewModel, Repository đóng vai trò là các Interface Adapters.</li>
+<li>Nếu ứng dụng sử dụng Database, cụ thể là SQL database thì tất cả các câu lệnh SQL hay thao tác với database nên đưọc viết ở đây.</li>
+</ul>
+<h2 id="Frameworks-and-Drivers"><a href="#Frameworks-and-Drivers" class="headerlink" title="Frameworks and Drivers"></a>Frameworks and Drivers</h2><blockquote>
+<p>The outermost layer is generally composed of frameworks and tools such as the Database, the Web Framework</p>
+</blockquote>
+<ul>
+<li>Phần mềm ở tầng này bao gồm các Frameworks và công cụ khác như Database hay Web UI…</li>
+<li>Đây là nơi chứa các chi tiết, Database chi tiết, Web UI chi tiết…</li>
+</ul>
+<h2 id="Only-Four-Circles"><a href="#Only-Four-Circles" class="headerlink" title="Only Four Circles?"></a>Only Four Circles?</h2><blockquote>
+<p>1 phần mềm chỉ gồm 4 tầng?</p>
+</blockquote>
+<ul>
+<li>Không, đây chỉ là tư tưởng, phần mềm của bạn có thể có nhiều hoặc ít hơn 4 tầng này.</li>
+<li>Không có quy tắc nào nói phần mềm chỉ bao gồm 4 tầng, nhưng dù có bao nhiều tầng đi chăng nữa, bạn sẽ phải tuần thủ quy tắc sự phụ thuộc như đã nói ở trên.</li>
+</ul>
+<h2 id="Crossing-boundaries"><a href="#Crossing-boundaries" class="headerlink" title="Crossing boundaries"></a>Crossing boundaries</h2><blockquote>
+<p>Tương tác giữa các tầng</p>
+</blockquote>
+<ul>
+<li>Sử dụng nguyên lý <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Dependency_inversion_principle">Dependency Inversion Principle</a></li>
+<li>Tuyệt đối không được phá vỡ quy tắc sự phụ thuộc</li>
+<li>Với 1 số ngôn ngữ như Java/kotlin có thể sử dụng interfaces/inheritance</li>
+</ul>
+<h2 id="Tong-ket"><a href="#Tong-ket" class="headerlink" title="Tổng kết"></a>Tổng kết</h2><p>Việc tuân thủ các quy tắc này không khó và nó sẽ rất hữu ích cho bạn trong tương lai. Bằng việc phân tách phần mềm thành các tầng khác nhau theo nguyên tắc sự phụ thuộc, bạn sẽ tạo nên 1 phần mềm có thể kiểm thử dễ dàng. Khi có 1 thành phần bên ngoài của phần mềm bị lỗi thời như Database hay Web Frameworks, bạn có thể dễ dàng thay đổi chúng bằng các thành phần khác mà chỉ tiêu tốn ít công sức.</p>
+<p>Tham khảo: <a target="_blank" rel="noopener" href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html">The Clean Architecture</a> của Robert C. Martin (Uncle Bob).</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>Liên kết bài viết：</strong>
+      <a href="https://nvquangth.github.io/2020/08/20/the-clean-architecture/" title="The Clean Architecture" target="_blank" rel="external">https://nvquangth.github.io/2020/08/20/the-clean-architecture/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>Bản quyền： </strong> Nếu bài viết có sử dụng hình ảnh, nội dung của bạn, hãy liên hệ tác giả để cùng xử lý nhé!
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/nvquangth" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/nvquangth" target="_blank"><span class="text-dark">Nguyễn Văn Quang</span><small class="ml-1x">Mobile Developer</small></a></h3>
+        <div>quangnv</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/08/25/configure-build-gradle-p1/" title="Tổng quan về Android build config"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2020/08/16/cach-xay-dung-cau-truc-du-lieu-stack-va-queue/" title="Xây dựng cấu trúc dữ liệu Stack và Queue"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Write a response...',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
